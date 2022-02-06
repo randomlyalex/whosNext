@@ -1,59 +1,16 @@
-package click.whosnext.restapiback.models;
+package click.whosnext.restapiback.services;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+public class QueueService {
 
+	//TODO Move logic into a QueueService ?
 
-public class Queue {
+	/*
 
-	private UUID id;
-	private String name;
-	private QueueItem head;
-	private QueueItem tail;
-	private List<QueueItem> list;
-
-	public Queue() {
-	}
-
-	public Queue( final String name ) {
+	createNewQueue:
+	public createNewQueue( final String name ) {
 		QueueItem sentinel = new QueueItem(UUID.nameUUIDFromBytes(String.format( "sentinal_{}", name).getBytes()));
 		List<QueueItem> initList = new ArrayList<>();
 		new Queue(UUID.randomUUID(), name, sentinel, sentinel, initList );
-	}
-
-	public Queue( final UUID id, final String name, final QueueItem head, final QueueItem tail,
-			final List<QueueItem> list ) {
-		this.id = id;
-		this.name = name;
-		this.head = head;
-		this.tail = tail;
-		this.list = list;
-	}
-
-	public UUID getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName( final String name ) {
-		this.name = name;
-	}
-
-	public QueueItem getHead() {
-		return head;
-	}
-
-	public QueueItem getTail() {
-		return this.tail;
-	}
-
-	public List<QueueItem> getList() {
-		return list;
 	}
 
 	public Boolean isEmpty() {
@@ -124,4 +81,9 @@ public class Queue {
 		//TODO check the next item etc... then notify with the new head, check for exceptions etc.
 		this.head.getUser().notify(this.head);
 	}
+
+
+	 */
+
+
 }
