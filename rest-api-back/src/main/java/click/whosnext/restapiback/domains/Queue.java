@@ -1,5 +1,7 @@
 package click.whosnext.restapiback.domains;
 
+import static javax.persistence.CascadeType.ALL;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -23,23 +25,31 @@ public class Queue {
 	@Id
 	@Column(name = "uuid")
 	private UUID uuid = UUID.randomUUID();
+
 	@Column(name = "name", nullable = false)
 	private String name;
+
 	@OneToOne(optional = false)
 	@JoinColumn(name = "head", nullable = false, unique = true)
 	private QueueItem head;
+
 	@OneToOne(optional = false)
 	@JoinColumn(name = "tail", nullable = false, unique = true)
 	private QueueItem tail;
-	@Column(name = "list")
-	@OneToMany
-	private List<QueueItem> list;
+
+	@Column(name = "queue_item")
+	@OneToMany(cascade=ALL, mappedBy="user")
+	private List<QueueItem> waitingList;
 
 	public Queue( final String name ) {
-		QueueItem sentinel = new QueueItem(UUID.nameUUIDFromBytes(String.format( "sentinal_{}", name).getBytes()));
-		List<QueueItem> initList = List.of(sentinel);
-		new Queue(UUID.randomUUID(), name, sentinel, sentinel, initList );
+		this.name = name;
 	}
+
+	//	public Queue( final String name ) {
+//		QueueItem sentinelQueueItem = new QueueItem(UUID.nameUUIDFromBytes(String.format( "sentinal_{}", name).getBytes()));
+//		List<QueueItem> initList = List.of(sentinelQueueItem);
+//		new Queue(UUID.randomUUID(), name, sentinelQueueItem, sentinelQueueItem, initList );
+//	}
 
 
 	public UUID getUuid() {
@@ -62,9 +72,39 @@ public class Queue {
 		return this.tail;
 	}
 
-	public List<QueueItem> getList() {
-		return list;
+	public List<QueueItem> getwaitingList() {
+		return waitingList;
 	}
 
+	public void setHead( final QueueItem head ) {
+		this.head = head;
+	}
+
+	public void setTail( final QueueItem tail ) {
+		this.tail = tail;
+	}
+
+	public List<QueueItem> getWaitingList() {
+		return waitingList;
+	}
+
+	public void setWaitingList( final List<QueueItem> waitingList ) {
+		this.waitingList = waitingList;
+	}
+
+//	public String toString(){
+//		return String.format( "Queue Name: %s %n Queue Size: %s", this.name, this.waitingList.size() -1 );
+//	}
+
+	public Boolean isEmpty() {
+		if (this.head == this.tail && this.waitingList.size() == 1) {
+			return true;
+		}
+		else {
+			System.out.println( "Queue out of sync." );
+			//throw QueueSyncException
+			return false;
+		}
+	}
 
 }

@@ -1,89 +1,57 @@
 package click.whosnext.restapiback.services;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import click.whosnext.restapiback.domains.Queue;
+import click.whosnext.restapiback.domains.QueueItem;
+import click.whosnext.restapiback.domains.User;
+import click.whosnext.restapiback.repositories.QueueRepository;
+
+@Component
 public class QueueService {
 
-	//TODO Move logic into a QueueService ?
+	@Autowired
+	private QueueRepository queueRepository;
+	@Autowired
+	private QueueItemService queueItemService;
 
-	/*
-
-	createNewQueue:
-	public createNewQueue( final String name ) {
-		QueueItem sentinel = new QueueItem(UUID.nameUUIDFromBytes(String.format( "sentinal_{}", name).getBytes()));
-		List<QueueItem> initList = new ArrayList<>();
-		new Queue(UUID.randomUUID(), name, sentinel, sentinel, initList );
+	public Queue createQueue(final String name) {
+		Queue queueToSave = new Queue(name);
+		QueueItem sentinelQueueItem = queueItemService.createSentinelItem( queueToSave );
+		queueToSave.setHead( sentinelQueueItem );
+		queueToSave.setTail( sentinelQueueItem ); // make this a builder
+		List<QueueItem> initList = List.of(sentinelQueueItem);
+		queueToSave.setWaitingList( initList );
+		return queueRepository.save( queueToSave );
 	}
 
-	public Boolean isEmpty() {
-		if (this.head == this.tail && this.list.size() == 1) {
-			return true;
-		}
-		else {
-			System.out.println( "Queue out of sync." );
-			//throw QueueSyncException
-			return false;
-		}
+	public void joinQueue( Queue queue, User user) {}
+
+	public Optional<String> getQueues() {
+		return Optional.ofNullable( queueRepository.findAll().toString() );
 	}
 
-	public void addToQueue( final QueueItem queueItem ) {
-		this.tail = queueItem;
-		this.list.add(queueItem);
-		if (  list.size() != queueItem.getPosition() ){
-			System.out.println( "Queue out of sync." );
-			//throw QueueSyncException
-		}
+	public void addToQueue( Queue queue, QueueItem queueItem  ) {
+
 		//TODO also check that its not already in the queue too!
 		// TODO check the user isnt in the queue already, this isnt possible either
 	}
 
-	public QueueItem removeFromQueueByPositon( final Integer position ) {
-		try {
-			if ( position == 1 ) {
-				throw new IndexOutOfBoundsException();
-			}
+	public void removeFromQueueByPositon( Queue queue, final Integer position ) {
+		//TODO
 
-			QueueItem itemToRemove = list.get( position );
-			this.removeFromQueueByItem( itemToRemove );
-
-			if ( list.size() != this.tail.getPosition() ) {
-
-				System.out.println( "Queue out of sync." );
-				//throw QueueSyncException
-			}
-
-			return itemToRemove;
-		}
-		catch ( IndexOutOfBoundsException e ) {
-			System.out.println( "Position Invalid" );
-			//throw PositionInvalidException
-			return null;
-		}
 	}
 
-	public Boolean removeFromQueueByItem( final QueueItem queueItem ) {
-		try {
-			this.list.remove(queueItem);
-		}
-		catch (Exception e) {
-			System.out.println( "Error removing from the list in queue" );
-			//throw ListRemoveError
-			return false;
-		}
-		if (  list.size() != this.tail.getPosition() ){
-			System.out.println( "Queue out of sync." );
-			//throw QueueSyncException
-			return false;
-		}
-		else return true ;
+	public void removeFromQueueByItem( Queue queue, QueueItem queueItem ) {
+		//TODO
 	}
 
 	public void whosNext(){
-		this.removeFromQueueByItem( this.head );
 		//TODO check the next item etc... then notify with the new head, check for exceptions etc.
-		this.head.getUser().notify(this.head);
 	}
-
-
-	 */
-
 
 }

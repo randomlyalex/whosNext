@@ -1,11 +1,13 @@
 package click.whosnext.restapiback.domains;
 
+
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import javax.persistence.Table;
@@ -21,19 +23,24 @@ public class QueueItem {
 
 	@Id
 	@Column(name = "uuid")
-	private UUID uuid = UUID.randomUUID();
-	@Column(name = "queue")
+	private UUID uuid;
+
 	@ManyToOne
+	@JoinColumn(name="queue_id", nullable=false)
 	private Queue queue;  //queue and position are unique
+
 	@Column(name = "position", nullable = false)
 	private Integer position;
-	@Column(name = "user")
+
 	@ManyToOne
+	@JoinColumn(name="user_id", nullable=false)
 	private User user;
 
-	public QueueItem( UUID givenId) {
-		this.uuid = givenId;
-		this.position = 1;
+	public QueueItem( Queue queue, Integer position, User user ) {
+		this.queue = queue;
+		this.position = position;
+		this.user = user;
+		this.uuid = UUID.randomUUID();
 	}
 
 	public UUID getUuid() {
