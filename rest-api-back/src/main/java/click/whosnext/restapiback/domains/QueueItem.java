@@ -1,6 +1,8 @@
 package click.whosnext.restapiback.domains;
 
 
+import static javax.persistence.CascadeType.ALL;
+
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -26,14 +28,14 @@ public class QueueItem {
 	private UUID uuid;
 
 	@ManyToOne
-	@JoinColumn(name="queue_id", nullable=false)
+	@JoinColumn(name="queue_id", nullable=false, referencedColumnName = "uuid", table = "queues")
 	private Queue queue;  //queue and position are unique
 
 	@Column(name = "position", nullable = false)
 	private Integer position;
 
 	@ManyToOne
-	@JoinColumn(name="user_id", nullable=false)
+	@JoinColumn(name="user_id", nullable=false, referencedColumnName = "uuid", table = "users")
 	private User user;
 
 	public QueueItem( Queue queue, Integer position, User user ) {

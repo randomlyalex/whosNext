@@ -21,8 +21,10 @@ public class User {
 	@Id
 	@Column(name = "uuid")
 	private UUID uuid = UUID.randomUUID();
+
 	@Column(name = "name")
 	private String name;
+
 	@Column(name = "email", unique = true)
 	private String email;
 

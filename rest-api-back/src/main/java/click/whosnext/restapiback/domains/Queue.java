@@ -13,6 +13,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -38,7 +40,8 @@ public class Queue {
 	private QueueItem tail;
 
 	@Column(name = "queue_item")
-	@OneToMany(cascade=ALL, mappedBy="user")
+	@JsonIgnore
+	@OneToMany(cascade=ALL, mappedBy="queue")
 	private List<QueueItem> waitingList;
 
 	public Queue( final String name ) {
