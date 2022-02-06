@@ -2,6 +2,8 @@ package click.whosnext.restapiback.domains;
 
 import static javax.persistence.CascadeType.ALL;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,16 +18,18 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity (name = "Queue")
 @Table(name = "queues")
-public class Queue {
+public class Queue implements Serializable {
 
 	@Id
-	@Column(name = "uuid")
+	@Column(name = "uuid", unique = true, nullable = false)
 	private UUID uuid = UUID.randomUUID();
 
 	@Column(name = "name", nullable = false)
@@ -39,13 +43,14 @@ public class Queue {
 	@JoinColumn(name = "tail", nullable = false, unique = true)
 	private QueueItem tail;
 
-	@Column(name = "queue_item")
 	@JsonIgnore
-	@OneToMany(cascade=ALL, mappedBy="queue")
-	private List<QueueItem> waitingList;
+	@OneToMany(cascade=ALL)
+	@JoinColumn(name = "queue_id")
+	private List<QueueItem> waitingList = new ArrayList<>();
 
 	public Queue( final String name ) {
 		this.name = name;
+		this.uuid = UUID.randomUUID();
 	}
 
 	//	public Queue( final String name ) {

@@ -1,5 +1,6 @@
 package click.whosnext.restapiback.domains;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -16,10 +17,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity(name = "User")
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
 
 	@Id
-	@Column(name = "uuid")
+	@Column(name = "uuid", unique = true, nullable = false)
 	private UUID uuid = UUID.randomUUID();
 
 	@Column(name = "name")

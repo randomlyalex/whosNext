@@ -23,8 +23,9 @@ public class QueueItemService {
 
 		UUID sentinelQueueUuid = UUID.nameUUIDFromBytes(String.format( "sentinal_{}", queue.getName()).getBytes());
 		User sentinelUser = userService.getSentinelUser();
-		QueueItem sentinelQueueItem = new QueueItem(sentinelQueueUuid , queue, 1, sentinelUser);
-		return queueItemRepository.save(sentinelQueueItem);
+//		QueueItem sentinelQueueItem = new QueueItem(sentinelQueueUuid , queue, 1, sentinelUser);
+//		return queueItemRepository.save(sentinelQueueItem);
+		return new QueueItem(sentinelQueueUuid , queue, 1, sentinelUser);
 	}
 
 	public void createQueueItem( User user, Queue queue) {

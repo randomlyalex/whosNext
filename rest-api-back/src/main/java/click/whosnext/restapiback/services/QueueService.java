@@ -24,9 +24,9 @@ public class QueueService {
 		QueueItem sentinelQueueItem = queueItemService.createSentinelItem( queueToSave );
 		queueToSave.setHead( sentinelQueueItem );
 		queueToSave.setTail( sentinelQueueItem ); // make this a builder
-		List<QueueItem> initList = List.of(sentinelQueueItem);
-		queueToSave.setWaitingList( initList );
-		return queueRepository.save( queueToSave );
+		List<QueueItem> initWaitingList = List.of(sentinelQueueItem);
+		queueToSave.setWaitingList( initWaitingList );
+		return queueRepository.save(queueToSave);
 	}
 
 	public void joinQueue( Queue queue, User user) {}
