@@ -46,7 +46,7 @@ public class Queue {
 	@JoinColumn(name = "tail", unique = true, nullable = true)
 	private QueueItem tail;
 
-	@JsonIgnore
+
 	@OneToMany(mappedBy = "queue", cascade = CascadeType.ALL)
 	private List<QueueItem> queueItems = new ArrayList<>();
 
