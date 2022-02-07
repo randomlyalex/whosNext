@@ -1,14 +1,16 @@
 package click.whosnext.restapiback.domains;
 
-import static javax.persistence.CascadeType.ALL;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -26,27 +28,27 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity (name = "Queue")
 @Table(name = "queues")
-public class Queue implements Serializable {
+public class Queue {
 
 	@Id
+	@GeneratedValue //TODO: consider hibernate annotations?
 	@Column(name = "uuid", unique = true, nullable = false)
-	private UUID uuid = UUID.randomUUID();
+	private UUID uuid;
 
-	@Column(name = "name", nullable = false)
+	@Column(name = "name")
 	private String name;
 
-	@OneToOne(optional = false)
+	@OneToOne(cascade = CascadeType.ALL) // OneToOne is causing the queue problem because it doesnt have OneToOne Relationship i need to start with a null tail.
 	@JoinColumn(name = "head", nullable = false, unique = true)
 	private QueueItem head;
 
-	@OneToOne(optional = false)
-	@JoinColumn(name = "tail", nullable = false, unique = true)
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "tail", unique = true, nullable = true)
 	private QueueItem tail;
 
 	@JsonIgnore
-	@OneToMany(cascade=ALL)
-	@JoinColumn(name = "queue_id")
-	private List<QueueItem> waitingList = new ArrayList<>();
+	@OneToMany(mappedBy = "queue", cascade = CascadeType.ALL)
+	private List<QueueItem> queueItems = new ArrayList<>();
 
 	public Queue( final String name ) {
 		this.name = name;
@@ -80,8 +82,8 @@ public class Queue implements Serializable {
 		return this.tail;
 	}
 
-	public List<QueueItem> getwaitingList() {
-		return waitingList;
+	public void setUuid( final UUID uuid ) {
+		this.uuid = uuid;
 	}
 
 	public void setHead( final QueueItem head ) {
@@ -92,20 +94,26 @@ public class Queue implements Serializable {
 		this.tail = tail;
 	}
 
-	public List<QueueItem> getWaitingList() {
-		return waitingList;
+	public List<QueueItem> getQueueItems() {
+		return queueItems;
 	}
 
-	public void setWaitingList( final List<QueueItem> waitingList ) {
-		this.waitingList = waitingList;
+	public void setQueueItems( final List<QueueItem> queueItems ) {
+		this.queueItems = queueItems;
 	}
 
-//	public String toString(){
-//		return String.format( "Queue Name: %s %n Queue Size: %s", this.name, this.waitingList.size() -1 );
-//	}
+	public void addtoQueueItemsList( final List<QueueItem> queueItems){
+		for ( QueueItem queueItem: queueItems) {
+			this.addtoQueueItemsList(queueItem);
+		}
+	}
+
+	public void addtoQueueItemsList( final QueueItem queueItem){
+		this.queueItems.add( queueItem );
+	}
 
 	public Boolean isEmpty() {
-		if (this.head == this.tail && this.waitingList.size() == 1) {
+		if (this.tail == null && this.queueItems.size() == 1) {
 			return true;
 		}
 		else {

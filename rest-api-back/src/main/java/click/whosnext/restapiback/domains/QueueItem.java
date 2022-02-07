@@ -1,50 +1,62 @@
 package click.whosnext.restapiback.domains;
 
 
-import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity (name = "QueueItem")
 @Table(name = "queue_items")
-public class QueueItem implements Serializable {
+public class QueueItem {
 
 	@Id
+	@GeneratedValue
 	@Column(name = "uuid", unique = true, nullable = false)
 	private UUID uuid;
 
 	@JsonIgnore
 	@ManyToOne
-	@JoinColumn(name="queue_id", nullable=false)
+	@JoinColumn(name="queue_id")
 	private Queue queue;  //queue and position are unique
 
-	@Column(name = "position", nullable = false)
+	@Column(name = "position")
 	private Integer position;
 
-	@ManyToOne
-	@JoinColumn(name="user_id", nullable=false)
+	@JsonIgnore
+	@ManyToOne()
+	@JoinColumn(name="user_id")
 	private User user;
 
 	public QueueItem( Queue queue, Integer position, User user ) {
 		this.queue = queue;
 		this.position = position;
 		this.user = user;
-		this.uuid = UUID.randomUUID();
+	}
+
+	public QueueItem( UUID uuid, Integer position, User user ) {
+		this.uuid = uuid;
+		this.position = position;
+		this.user = user;
+	}
+
+	public void setUuid( final UUID uuid ) {
+		this.uuid = uuid;
 	}
 
 	public UUID getUuid() {

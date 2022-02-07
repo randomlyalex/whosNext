@@ -1,9 +1,12 @@
 package click.whosnext.restapiback.controller;
 
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,17 +23,16 @@ public class QueueController {
 	private QueueService queueService;
 
 	@PostMapping("/queue")
-	@ResponseBody
-	public Optional<String> createQueue(
+	public ResponseEntity<Optional<Queue>> createQueue(
 			@RequestParam(name = "name") String name){
-		Queue queue = queueService.createQueue( name );
-		return Optional.ofNullable( queue.toString() );
+
+		return new ResponseEntity(queueService.createQueue( name ), HttpStatus.OK);
 	}
 
 	@GetMapping("/queues")
-	@ResponseBody
-	public Optional<String> getQueues(){
-		return queueService.getQueues();
+
+	public ResponseEntity<Optional<List<Queue>>> getQueues(){
+		return new ResponseEntity(queueService.getQueues(), HttpStatus.OK);
 	}
 
 	/*

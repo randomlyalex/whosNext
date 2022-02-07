@@ -23,16 +23,16 @@ public class QueueService {
 		Queue queueToSave = new Queue(name);
 		QueueItem sentinelQueueItem = queueItemService.createSentinelItem( queueToSave );
 		queueToSave.setHead( sentinelQueueItem );
-		queueToSave.setTail( sentinelQueueItem ); // make this a builder
-		List<QueueItem> initWaitingList = List.of(sentinelQueueItem);
-		queueToSave.setWaitingList( initWaitingList );
-		return queueRepository.save(queueToSave);
+		queueToSave.addtoQueueItemsList(sentinelQueueItem );
+		Queue savedQueue =  queueRepository.save(queueToSave);
+		queueItemService.update(sentinelQueueItem, savedQueue);
+		return savedQueue;
 	}
 
 	public void joinQueue( Queue queue, User user) {}
 
-	public Optional<String> getQueues() {
-		return Optional.ofNullable( queueRepository.findAll().toString() );
+	public Optional<List<Queue>> getQueues() {
+		return Optional.of(queueRepository.findAll() );
 	}
 
 	public void addToQueue( Queue queue, QueueItem queueItem  ) {

@@ -1,13 +1,12 @@
 package click.whosnext.restapiback.domains;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -17,16 +16,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity(name = "User")
 @Table(name = "users")
-public class User implements Serializable {
+public class User {
 
 	@Id
+	@GeneratedValue
 	@Column(name = "uuid", unique = true, nullable = false)
-	private UUID uuid = UUID.randomUUID();
+	private UUID uuid;
 
 	@Column(name = "name")
 	private String name;
 
-	@Column(name = "email", unique = true)
+	@Column(name = "email")
 	private String email;
 
 	public User( final String name, final String email ) {
@@ -35,11 +35,10 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
-	public User( UUID uuid, final String name, final String email ) {
+	public void setUuid( final UUID uuid ) {
 		this.uuid = uuid;
-		this.name = name;
-		this.email = email;
 	}
+
 
 	public UUID getUuid() {
 		return uuid;
@@ -65,14 +64,4 @@ public class User implements Serializable {
 		return String.format( "Name: %s %n Email: %s", this.name, this.email );
 	}
 
-	@OneToMany(mappedBy = "user")
-	private Collection<QueueItem> queueItem;
-
-	public Collection<QueueItem> getQueueItem() {
-		return queueItem;
-	}
-
-	public void setQueueItem( final Collection<QueueItem> queueItem ) {
-		this.queueItem = queueItem;
-	}
 }
