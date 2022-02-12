@@ -1,0 +1,27 @@
+# --- COMMIT START ---
+# <Quire> (If applied, this commit will...) <subject>
+# |<----   Preferably using up to 50 chars   --->|<- but a max of 72 ->|
+# <blank line>
+# (Optional, but usually required) Explain why this change is being made
+# |<----   try to limit each line to a maximum of 72 characters   ---->|
+# (Optional) Provide links to any other relevant cards, changes, pages
+# or other resources
+# --- COMMIT END ---
+
+# EXAMPLE:
+# Quire-1337 Added new notify service
+#
+# This change adds the required code to notify via email
+# its abstracted in a way it can be adapted for slack later
+#
+# --------------------
+# Remember to:
+#   * Capitalize the subject line
+#   * Use the imperative mood in the subject line
+#   * Do not end the subject line with a period
+#   * Separate subject from body with a blank line
+#   * Use the body to explain what and why vs. how
+#   * Can use multiple lines with "-" or "*" for bullet points in body
+#   * Write commits for long-term reading
+#     * e.g. don't write "review comments", write why you're actually making the specific change
+# --------------------
