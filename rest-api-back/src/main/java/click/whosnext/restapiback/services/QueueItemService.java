@@ -10,6 +10,9 @@ import click.whosnext.restapiback.domains.Queue;
 import click.whosnext.restapiback.domains.QueueItem;
 import click.whosnext.restapiback.domains.User;
 import click.whosnext.restapiback.repositories.QueueItemRepository;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Component
 public class QueueItemService {

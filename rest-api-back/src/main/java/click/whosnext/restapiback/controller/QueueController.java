@@ -3,6 +3,7 @@ package click.whosnext.restapiback.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import click.whosnext.restapiback.domains.Queue;
@@ -22,21 +22,23 @@ public class QueueController {
 	@Autowired
 	private QueueService queueService;
 
-	@PostMapping("/queue")
-	public ResponseEntity<Optional<Queue>> createQueue(
-			@RequestParam(name = "name") String name){
+	@PostMapping("/joinqueue")
+	public ResponseEntity<Optional<Queue>> joinQueue(
+			@RequestParam(name = "queueUuid") String q,
+			@RequestParam(name = "userUuid") String u) {
+		UUID queueUuid = UUID.nameUUIDFromBytes(q.getBytes());
+		UUID userUuid = UUID.nameUUIDFromBytes(u.getBytes());
+		return new ResponseEntity<>(queueService.joinQueue( queueUuid, userUuid), HttpStatus.OK);
+	}
 
-		return new ResponseEntity(queueService.createQueue( name ), HttpStatus.OK);
+	@PostMapping("/queue")
+	public ResponseEntity<Queue> createQueue(
+			@RequestParam(name = "name") String name){
+		return new ResponseEntity<>(queueService.createQueue( name ), HttpStatus.OK);
 	}
 
 	@GetMapping("/queues")
-
 	public ResponseEntity<Optional<List<Queue>>> getQueues(){
-		return new ResponseEntity(queueService.getQueues(), HttpStatus.OK);
+		return new ResponseEntity<>(queueService.getQueues(), HttpStatus.OK);
 	}
-
-	/*
-	TODO implement REST routes for the queue here Join etc... then link them up to business login in
-	the services etc... Keep this simple the services should do most of the work i think?
-	 */
 }

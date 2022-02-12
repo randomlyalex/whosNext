@@ -2,6 +2,7 @@ package click.whosnext.restapiback.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,14 +11,23 @@ import click.whosnext.restapiback.domains.Queue;
 import click.whosnext.restapiback.domains.QueueItem;
 import click.whosnext.restapiback.domains.User;
 import click.whosnext.restapiback.repositories.QueueRepository;
+import click.whosnext.restapiback.repositories.UserRepository;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Component
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class QueueService {
 
 	@Autowired
 	private QueueRepository queueRepository;
 	@Autowired
 	private QueueItemService queueItemService;
+	@Autowired
+	private UserRepository userRepository;
 
 	public Queue createQueue(final String name) {
 		Queue queueToSave = new Queue(name);
@@ -29,7 +39,20 @@ public class QueueService {
 		return savedQueue;
 	}
 
-	public void joinQueue( Queue queue, User user) {}
+	public void joinQueue( Queue queue, User user) {
+
+
+	}
+
+	public Optional<Queue> joinQueue( UUID queueUuid, UUID userUuid) {
+		Optional<Queue> queueToJoin = queueRepository.findById( queueUuid );
+		Optional<User> userJoining = userRepository.findById( userUuid );
+		QueueItem userQueueItem = queueItemService.createQueueItem( userJoining.get(), queueToJoin.get() );
+		queueToJoin.get().setTail(userQueueItem);
+		queueToJoin.get().addtoQueueItemsList( userQueueItem );
+		// save them
+		return queueToJoin;
+	}
 
 	public Optional<List<Queue>> getQueues() {
 		return Optional.of(queueRepository.findAll() );
