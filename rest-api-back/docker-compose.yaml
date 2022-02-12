@@ -16,8 +16,9 @@ services:
     networks:
       - whosnext-network
   db:
-    image: 'postgres:13.1-alpine'
     container_name: db
+    build:
+      context: ./database
     environment:
       - POSTGRES_USER=compose-postgres
       - POSTGRES_PASSWORD=compose-postgres
