@@ -48,7 +48,7 @@ public class Queue {
 
 
 	@OneToMany(mappedBy = "queue", cascade = CascadeType.ALL)
-	private List<QueueItem> queueItems = new ArrayList<>();
+	private final List<QueueItem> queueItems = new ArrayList<>();
 
 	public Queue( final String name ) {
 		this.name = name;
@@ -96,10 +96,6 @@ public class Queue {
 
 	public List<QueueItem> getQueueItems() {
 		return queueItems;
-	}
-
-	public void setQueueItems( final List<QueueItem> queueItems ) {
-		this.queueItems = queueItems;
 	}
 
 	public void addtoQueueItemsList( final List<QueueItem> queueItems){

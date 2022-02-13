@@ -1,29 +1,48 @@
-version: "2"
+# Docker Compose file Reference (https://docs.docker.com/compose/compose-file/)
+version: '3'
+
+#Define services
 services:
+
+  #PostgreSQL Database for the application
+  db:
+    build: database/
+    container_name: db
+    #Volume mounted for database for the storage
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432" # Forward the exposed port 5432 on the container to port 5432 on the host machine
+
+    #Environment variable for DB name, user and password
+    environment:
+      - POSTGRES_DB=whosnext_db
+      - POSTGRES_USER=whosnext
+      - POSTGRES_PASSWORD=whosnext
+
+  #Back-end Spring Boot Application
   rest-api-back:
+    #The docker file in scrum-app build the jar and provides the docker image with the following name.
+    build: .
     container_name: rest-api-back
-    build:
-      context: .
+
+    #Environment variables for Spring Boot Application.
+    environment:
+      - DB_SERVER=db
+      - POSTGRES_DB=whosnext_db
+      - POSTGRES_USER=whosnext
+      - POSTGRES_PASSWORD=whosnext
+      - JPA_HIBERNATE_DDL_AUTO=update
+      - LOG_LEVEL_SPRINGFRAMEWORK=debug
+      - LOG_LEVEL_HIBERNATE_SQL=debug
+      - LOG_LEVEL_HIBERNATE_TYPE=trace
+    ports:
+      - "9191:9191" # Forward the exposed port 8080 on the container to port 8080 on the host machine
+    links:
+      - db
     depends_on:
       - db
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/whosnext_db
-      - SPRING_DATASOURCE_USERNAME=compose-postgres
-      - SPRING_DATASOURCE_PASSWORD=compose-postgres
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-    ports:
-      - "9191:9191"
-    networks:
-      - whosnext-network
-  db:
-    container_name: db
-    build:
-      context: ./database
-    environment:
-      - POSTGRES_USER=compose-postgres
-      - POSTGRES_PASSWORD=compose-postgres
-    networks:
-      - whosnext-network
-networks:
-  whosnext-network:
-    driver: bridge
+
+#Volumes for DB data
+volumes:
+  db-data:

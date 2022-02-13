@@ -1,4 +1,4 @@
-FROM postgres:latest
-COPY . /provison
-WORKDIR /provison
-RUN /provison/provision-local-dev.sh
+FROM postgres
+#context is ./database
+COPY ./schema /docker-entrypoint-initdb.d/
+CMD ["docker-entrypoint.sh", "postgres"]
