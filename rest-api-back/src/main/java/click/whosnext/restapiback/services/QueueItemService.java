@@ -10,9 +10,7 @@ import click.whosnext.restapiback.domains.Queue;
 import click.whosnext.restapiback.domains.QueueItem;
 import click.whosnext.restapiback.domains.User;
 import click.whosnext.restapiback.repositories.QueueItemRepository;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
 
 @Component
 public class QueueItemService {
@@ -26,7 +24,7 @@ public class QueueItemService {
 
 		UUID sentinelQueueUuid = UUID.nameUUIDFromBytes(String.format( "sentinal_{}", queue.getName()).getBytes());
 		User sentinelUser = userService.getSentinelUser();
-		QueueItem sentinelQueueItem = new QueueItem(sentinelQueueUuid, 0, sentinelUser);
+		QueueItem sentinelQueueItem = new QueueItem(sentinelQueueUuid, queue, 0, sentinelUser);
 //		QueueItem sentinelQueueItem = new QueueItem(sentinelQueueUuid , queue, 1, sentinelUser);
 //		QueueItem sentinelQueueItem = QueueItem.builder()
 //				.queue( queue )

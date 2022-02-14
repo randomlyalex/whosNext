@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+#Ignore the persisted db-data file.
+/database/db-data

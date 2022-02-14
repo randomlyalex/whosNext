@@ -1,6 +1,6 @@
 package click.whosnext.restapiback.domains;
 
-import java.io.Serializable;
+
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -19,7 +19,6 @@ import lombok.NoArgsConstructor;
 public class User {
 
 	@Id
-	@GeneratedValue
 	@Column(name = "uuid", unique = true, nullable = false)
 	private UUID uuid;
 

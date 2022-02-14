@@ -26,7 +26,6 @@ import lombok.NoArgsConstructor;
 public class QueueItem {
 
 	@Id
-	@GeneratedValue
 	@Column(name = "uuid", unique = true, nullable = false)
 	private UUID uuid;
 
@@ -44,13 +43,8 @@ public class QueueItem {
 	private User user;
 
 	public QueueItem( Queue queue, Integer position, User user ) {
+		this.uuid = UUID.randomUUID();
 		this.queue = queue;
-		this.position = position;
-		this.user = user;
-	}
-
-	public QueueItem( UUID uuid, Integer position, User user ) {
-		this.uuid = uuid;
 		this.position = position;
 		this.user = user;
 	}

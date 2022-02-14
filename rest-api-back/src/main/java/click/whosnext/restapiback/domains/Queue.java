@@ -39,11 +39,11 @@ public class Queue {
 	private String name;
 
 	@OneToOne(cascade = CascadeType.ALL) // OneToOne is causing the queue problem because it doesnt have OneToOne Relationship i need to start with a null tail.
-	@JoinColumn(name = "head", nullable = false, unique = true)
+	@JoinColumn(name = "head", unique = true)
 	private QueueItem head;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "tail", unique = true, nullable = true)
+	@JoinColumn(name = "tail", unique = true)
 	private QueueItem tail;
 
 

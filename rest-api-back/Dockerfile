@@ -7,8 +7,9 @@ WORKDIR /home/gradle/src
 # Build!
 RUN gradle assemble --no-daemon
 
-FROM eclipse-temurin:11
+FROM eclipse-temurin:11-jre-alpine
 EXPOSE 9191
+ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,address=*:9192,server=y,suspend=n
 
 RUN mkdir /app
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/rest-api-back.jar

@@ -3,11 +3,10 @@ version: '3'
 
 #Define services
 services:
-
-  #PostgreSQL Database for the application
-  db:
+#  PostgreSQL Database for the application
+  postgresql:
     build: database/
-    container_name: db
+    container_name: postgresql
     #Volume mounted for database for the storage
     volumes:
       - db-data:/var/lib/postgresql/data
@@ -19,29 +18,63 @@ services:
       - POSTGRES_DB=whosnext_db
       - POSTGRES_USER=whosnext
       - POSTGRES_PASSWORD=whosnext
+    networks:
+      - whosnext
+
+
+#  #MySQL Database for the application
+#  mysql:
+#    build: database/
+#    container_name: mysql
+#    #Volume mounted for database for the storage
+#    volumes:
+#      - db-data:/var/lib/mysql
+#    ports:
+#      - "3307:3306" # Forward the exposed port 3306 on the container to port 3307 on the host machine
+#    #Environment variable for DB name, user and password
+#    environment:
+#      - MYSQL_ROOT_PASSWORD=whosnext
+#      - MYSQL_USER=whosnext
+#      - MYSQL_PASSWORD=whosnext
+#      - MYSQL_DATABASE=whosnext_db
+#    networks:
+#      - whosnext
+
 
   #Back-end Spring Boot Application
-  rest-api-back:
+  server:
     #The docker file in scrum-app build the jar and provides the docker image with the following name.
     build: .
-    container_name: rest-api-back
+    container_name: server
 
     #Environment variables for Spring Boot Application.
     environment:
-      - DB_SERVER=db
-      - POSTGRES_DB=whosnext_db
-      - POSTGRES_USER=whosnext
-      - POSTGRES_PASSWORD=whosnext
+      - DB_NAME=whosnext_db
+      - DB_USER=whosnext
+      - DB_PASSWORD=whosnext
+      - DB_TYPE=postgresql
+      - DB_SERVER=postgresql
+      - JDBC_DRIVER=org.postgresql.Driver
+      - SPING_INIT_DB_TYPE=postgres
+      - HIBERNATE_DIALECT=PostgreSQL9Dialect
       - JPA_HIBERNATE_DDL_AUTO=update
       - LOG_LEVEL_SPRINGFRAMEWORK=debug
       - LOG_LEVEL_HIBERNATE_SQL=debug
       - LOG_LEVEL_HIBERNATE_TYPE=trace
+      - SERVER_PORT=9191
+
     ports:
       - "9191:9191" # Forward the exposed port 8080 on the container to port 8080 on the host machine
+      - "9192:9192" #Remote debugging
     links:
-      - db
+      - postgresql
     depends_on:
-      - db
+      - postgresql
+    networks:
+      - whosnext
+
+networks:
+   whosnext:
 
 #Volumes for DB data
 volumes:

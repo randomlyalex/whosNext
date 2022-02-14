@@ -24,7 +24,7 @@ public class UserService {
 	} */
 
 	public User getSentinelUser(){
-		Optional<User> sentinelUser = userRepository.findById( UUID.nameUUIDFromBytes( "sentinelUser".getBytes() ));
+		Optional<User> sentinelUser = userRepository.findById( UUID.nameUUIDFromBytes("sentinelUser".getBytes() ));
 		if (sentinelUser.isPresent()){
 			return sentinelUser.get();
 		}

@@ -1,13 +1,3 @@
---This may or may not be needed depending on DDL=update,
---or if the container entrypoint isnt run because data is persisted with volumnes?
---CREATE DATABASE `whosnext_db`;
---CREATE USER whosnext WITH PASSWORD 'whosnext';
---GRANT ALL PRIVILEGES ON DATABASE whosnext_db TO whosnext;
-
-\connect whosnext
-
-USE whosnext_db;
-
 CREATE TABLE IF NOT EXISTS users (
     uuid            UUID            NOT NULL        PRIMARY KEY,
     email           VARCHAR(255)
